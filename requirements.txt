@@ -1,0 +1,6 @@
+flask
+Flask-Minify
+Flask-APScheduler
+python-dotenv
+requests
+argon2-cffi

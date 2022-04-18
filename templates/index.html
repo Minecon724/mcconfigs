@@ -1,0 +1,210 @@
+<html>
+  <style>
+    * {
+      font-size: clamp(1.1em, 2.5vw, 2.9em)
+    }
+    .config {
+      border-radius: 24px;
+      width: 70%;
+      padding: 10px;
+      margin: 2vw;
+      background-color: #323232;
+      display: grid;
+      grid-template-areas:
+        'name name user'
+        'desc desc desc'
+        'crea crea clie';
+    }
+    .cName { font-size: clamp(1em, 3vw, 2em); grid-area: name; }
+    .cUser {
+      text-align: right;
+      font-size: clamp(0.5em, 2vw, 1em);
+      grid-area: user;
+    }
+    .cDescription { font-size: clamp(0.7em, 2vw, 2em); grid-area: desc; }
+    .cCreated { font-size: clamp(0.5em, 2vw, 1em); grid-area: crea; }
+    .cClient {
+      text-align: right;
+      font-size: clamp(0.5em, 2vw, 1em);
+      grid-area: clie;
+    }
+    #template { display: none; }
+    #navbar {
+      height: clamp(2em, 5vh, 3em);
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #323232;
+      font-size: clamp(0.5em, 2vw, 2em);
+    }
+    #navbar > li {
+      float: left;
+    }
+    #navbar > li a {
+      display: block;
+      text-decoration: none;
+      height: 100%;
+      text-align: center;
+      padding: 8px;
+      transition: 0.2s;
+    }
+    #navbar > li a:hover {
+      color: lime;
+      background-color: black;
+    }
+    .info {
+      text-align: center;
+    }
+    body > p {
+      margin: 0;
+      padding: 0;
+    }
+    input {
+      padding: 8px;
+      font-family: 'Fira Code', monospace;
+      height: 100%;
+      display: block;
+      color: lime;
+      background-color: rgba(0,0,0,0);
+      border: none;
+      border-left: 2px solid aqua;
+    }
+    input:focus { outline: none; }
+  </style>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap">
+    <link rel="stylesheet" media="print" onload="this.onload=null;this.removeAttribute('media');" href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap">
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap">
+    </noscript>
+    <title>MCConfigs</title>
+  </head>
+  <body>
+    <ul id="navbar">
+      {% if session.token %}
+        <li><a href='/account'>Account</a></li>
+        <li><a href='/api/auth/logout'>Logout</a></li>
+        <li><a href='/upload'>Upload</a></li>
+      {% else %}
+        <li><a href="/login">Login</a></li>
+        <li><a href="/register">Register</a></li>
+      {% endif %}
+      <li>
+        <form action="">
+          <input required type="text" id="searchBox" name="searchBox" placeholder="Search">
+        </form>
+      </li>
+    </ul>
+    {% if session.token %}
+      <p class="info">Welcome, {{session.username}}</p>
+    {% endif %}
+    <p id="header" style="margin-left: 4vw;">Latest uploads:</p>
+    <div class="config" id="template">
+      <div class="cName">
+        <a href="/">Name</a>
+      </div>
+      <div class="cDescription">
+        Description
+      </div>
+      <div class="cUser">
+        User
+      </div>
+      <div class="cCreated">
+        Created
+      </div>
+      <div class="cClient">
+        Client
+      </div>
+    </div>
+  </body>
+  <script>
+    function getElementInsideDivByClass(div, clazz) {
+      var elm = document.getElementsByClassName(clazz);
+      var curr;
+      for (var i=0; i<elm.length; i++) {
+        curr = elm[i];
+        var parent = curr ? curr.parentNode : {};
+        if (parent.id && parent.id == div.id) return curr;
+      }
+      return null;
+    }
+    function listConfig(id, name, created, description, client, user) {
+      var template = document.getElementById('template');
+      var div = template.cloneNode(true);
+      div.setAttribute('id', id);
+      document.body.appendChild(div);
+      var pname = getElementInsideDivByClass(div, 'cName');
+      var a = document.createElement('a');
+      a.href = '/config/' + id;
+      a.innerText = name;
+      pname.innerHTML = a.outerHTML;
+      var puser = getElementInsideDivByClass(div, 'cUser');
+      puser.innerHTML = 'by ' + user;
+      var pcreated = getElementInsideDivByClass(div, 'cCreated');
+      var d = new Date(created*1000);
+      const year = d.getFullYear();
+      const month = d.getMonth() + 1;
+      const day = d.getDate();
+      const hour = d.getHours();
+      const minute = d.getMinutes();
+      const second = d.getSeconds();
+      pcreated.innerHTML = `${day}.${month}.${year} ${hour}:${minute}:${second}`;
+      var pdesc = getElementInsideDivByClass(div, 'cDescription');
+      var descStr = description.slice(0, 30);
+      if (descStr.length > 28) descStr += '...';
+      pdesc.innerHTML = descStr;
+      var pClient = getElementInsideDivByClass(div, 'cClient');
+      pClient.innerHTML = 'for ' + client;
+    }
+    function httpGet(url, responseType, callback) {
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.responseType = responseType;
+      xmlHttp.onreadystatechange = function() {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+          callback(xmlHttp.response);
+      }
+      xmlHttp.open("GET", url, true);
+      xmlHttp.send(null);
+    }
+    function httpPost(url, responseType, params, callback) {
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.reponseType = responseType;
+      xmlHttp.onreadystatechange = function () {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+          callback(xmlHttp.response);
+      }
+      xmlHttp.open("POST", url, true);
+      xmlHttp.setRequestHeader('Content-Type', 'application/json');
+      xmlHttp.send(JSON.stringify(params));
+    }
+    const urlParams = new URL(window.location.href).searchParams;
+    console.log(urlParams);
+    const query = urlParams.get('searchBox');
+    if (query != undefined) {
+      document.getElementById('header').innerHTML = 'Search results for "' + query + '"';
+      httpPost('/api/search', 'json',
+        {'query': query}, function(response) {
+        const parsed = JSON.parse(response);
+        const keys = Object.keys(parsed);
+        var config;
+        keys.forEach(function(item, index) {
+          config = parsed[item];
+          listConfig(item, config[0], config[3], config[4], config[5], config[6])
+        });
+      });
+    } else {
+      httpGet('/api/configs', 'json', function(response) {
+        const keys = Object.keys(response);
+        var config;
+        keys.forEach(function(item, index) {
+          config = response[item];
+          listConfig(item, config[0], config[3], config[4], config[5], config[6]);
+        });
+      });
+    }
+  </script>
+</html>

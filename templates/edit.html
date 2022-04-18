@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    * {
+      font-size: clamp(1.1em, 2.5vw, 2.9em);
+    }
+    #space {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+    #align {
+      width: 75%;
+      height: 75%;
+      margin: auto;
+    }
+    a {
+      color: lime;
+    }
+    #name {
+      width: 100%;
+      border-radius: 12px 12px 0 0;
+    }
+    #desc {
+      font-size: clamp(0.7em, 2.5vw, 2em);
+      border-radius: 0 0 12px 12px;
+      width: 100%;
+      resize: none;
+      height: 50vh;
+    }
+    input, textarea {
+      font-family: 'Fira Code', monospace;
+      background-color: #323232;
+      border: none;
+      border-radius: 16px;
+      color: lime;
+      padding: 4px;
+    }
+    input[type=submit] {
+      cursor: pointer;
+      transition: 0.2s;
+      padding: 8px 5vh;
+    }
+    input[type=submit]:hover {
+      background-color: rgba(0,0,0,0);
+    }
+  </style>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap">
+    <link rel="stylesheet" media="print" onload="this.onload=null;this.removeAttribute('media');" href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap">
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap">
+    </noscript>
+    <title>Edit {{name}} - MCConfigs</title>
+  </head>
+  <body>
+    <div id="space">
+        <div id="align">
+          <p id="header">Edit or <a href="/api/delete/{{id|safe}}">delete</a> {{name}}</p>
+          <form id="form" action="/api/edit/{{id|safe}}" method="POST">
+            <input id="name" name="name" placeholder="Name" value="{{name}}">
+            <textarea id="desc" rows="5" name="desc" form="form" placeholder="Description">{{description}}</textarea>
+          </form>
+       </div>
+       <input type="submit" form="form" value="Apply changes">
+    </div>
+  </body>
+</html>

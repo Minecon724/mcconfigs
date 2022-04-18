@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    * {
+      font-size: clamp(1.1em, 2.5vw, 2.9em);
+    }
+    #space {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+    #align {
+      width: 75%;
+      height: 50%;
+      margin: auto;
+    }
+    input {
+      border: none;
+      background-color: #323232;
+      border-radius: 16px;
+      width: 100%;
+      color: lime;
+      padding: 8px;
+      margin-bottom: 16px;
+    }
+    input[type=submit], input[type=text], input[type=password] {
+      font-family: 'Fira Code', monospace;
+    }
+    input[type=submit] {
+      cursor: pointer;
+      transition: 0.2s;
+      width: 50%;
+      margin: auto;
+    }
+    input[type=submit]:hover {
+      background-color: rgba(0,0,0,0);
+    }
+  </style>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap">
+    <link rel="stylesheet" media="print" onload="this.onload=null;this.removeAttribute('media');" href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap">
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap">
+    </noscript>
+    <title>Login - MCConfigs</title>
+  </head>
+  <body>
+    <div id="space"><div id="align">
+      <form id="form" action="/api/auth/login" method="POST">
+        <input type="text" name="username" placeholder="Username" minlength="2" />
+        <br>
+        <input type="password" name="password" placeholder="Password" minlength="4" />
+      </form>
+    </div>
+    <input form="form" type="submit" value="Login">
+    </div>
+  </body>
+</html>

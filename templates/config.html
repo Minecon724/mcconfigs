@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    #space {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+    #align {
+      width: 50%;
+      height: 50%;
+      margin: auto;
+    }
+    @media screen and (max-width: 1000px) {
+      #align { width: 100%; padding: 0 3vw;}
+    }
+    a {
+      color: lime;
+    }
+    #name {
+      font-size: clamp(2em, 12vw, 8em);
+    }
+    #desc {
+      padding: 6px;
+      border-radius: 12px;
+      background-color: #323232;
+      font-size: clamp(0.2em, 2.5vw, 1.5em);
+    }
+    #url {
+      font-size: clamp(1em, 5vw, 3em);
+    }
+    #created {
+      font-size: clamp(1em, 6vw, 3em);
+      margin-bottom: 16px;
+    }
+  </style>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap">
+    <link rel="stylesheet" media="print" onload="this.onload=null;this.removeAttribute('media');" href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap">
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap">
+    </noscript>
+    <title>{{name}} - MCConfigs</title>
+  </head>
+  <body>
+    <div id="space">
+        <div id="align">
+          <p id="name">{{name}}</p>
+          <p id="created">by {{user}} on {{created_str}}</p>
+          <p id="desc">{{description|safe}}</p>
+          {% if owner %}
+            <p id="edit"><a href="/config/edit/{{id|safe}}">edit</a></p>
+          {% endif %}
+          <p id="url"><a href="{{file_url}}">Download for {{client}}</a></p>
+        </div>
+    </div>
+  </body>
+</html>

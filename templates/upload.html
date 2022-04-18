@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    * {
+      font-size: clamp(1.1em, 2.5vw, 2.9em);
+    }
+    #space {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+    #align {
+      width: 75%;
+      height: 75%;
+      margin: auto;
+    }
+    #name {
+      width: calc(50% - 3vw);
+    }
+    #client {
+      width: calc(50% - 3vw);
+    }
+    #submit {
+      text-align: center;
+      width: 50%;
+      margin: auto;
+      padding: 0;
+    }
+    input::file-selector-button {
+      background: #323232;
+      color: lime;
+      border: none;
+      border-radius: 16px;
+      transition: 0.2s;
+      cursor: pointer;
+      font-family: 'Fira Code', monospace;
+    }
+    input::file-selector-button:hover {
+      background: black;
+    }
+    input, textarea, select {
+      font-family: 'Fira Code', monospace;
+      resize: none;
+      width: 100%;
+      background: #323232;
+      border: none;
+      border-radius: 16px;
+      color: lime;
+      margin-bottom: 1vh;
+      padding: 4px;
+    }
+    input[type=submit] {
+      font-family: 'Fira Code', monospace;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    input[type=submit]:hover {
+      background-color: rgba(0,0,0,0);
+    }
+  </style>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap">
+    <link rel="stylesheet" media="print" onload="this.onload=null;this.removeAttribute('media');" href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap">
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap">
+    </noscript>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}" />
+    <title>Upload to MCConfigs</title>
+  </head>
+  <body>
+    <div id="space">
+      <div id="align">
+        <p>Create a config</p>
+        <form id="form" action="/api/upload" method="POST" enctype="multipart/form-data">
+          <input id="name" type="text" name="name" placeholder="Name" required />
+          <select id="client" name="client" form="form">
+            {{ select|safe }}
+          </select>
+          <br>
+          <textarea rows="4" form="form" name="desc" placeholder="Description"></textarea>
+          <br>
+          <input id="file" type="file" name="file" required />
+        </form>
+      </div>
+      <input id="submit" type="submit" form="form" value="Submit" />
+    </div>
+  </body>
+</html>
