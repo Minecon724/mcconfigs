@@ -8,7 +8,7 @@ from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 from secrets import token_urlsafe
 from time import time
-from dotenv import dotenv_values
+from dotenv import load_dotenv
 from datetime import datetime
 from requests import post
 import sqlite3
@@ -16,19 +16,21 @@ import sqlite3
 # Local libraries
 from logger import Logger
 
+load_dotenv()
+
 # START CONFIG
 CONFIG_DIR = 'userconfigs'
 DB = 'data/data.db'
 USERFILES_DB = 'data/user.db'
-FC_KEY = 'A1USHGD9CASGSR2RQHCP46AH0U14UALR25QCQSLAJ8FAU00NMJGVTPIFRM'
-FC_SITEKEY = 'FCMH5D0A9QC35UF0'
+FC_KEY = getenv('FC_KEY')
+FC_SITEKEY = getenv('FC_SITEKEY')
 # END CONFIG
 
 clients = ['Rise', 'Drip', 'Azura', 'FDP', 'LiquidBounce', 'ZeroDay', 'Tenacity', 'Moon', 'Vape']
 
 app = Flask(__name__)
 app.config['SCHEDULER_API_ENABLED'] = True
-app.config['SECRET_KEY'] = dotenv_values('.env')['SECRET_KEY']
+app.config['SECRET_KEY'] = getenv('SECRET_KEY')
 
 Minify(app=app, html=True, js=True, cssless=True)
 
